@@ -1,6 +1,6 @@
 import time
 import random
-from os import X_OK, stat, system, name
+from os import stat, system, name
 
 board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 score = 0
