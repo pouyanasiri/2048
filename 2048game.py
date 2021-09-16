@@ -139,28 +139,29 @@ def move_left():
 ###################################################################################
 
 def add_elements_move_right() :                    
-    i=3
-    while i > 0 :
+    i=2
+    while i > -1 :
         for j in range(4):
-            if board[j][i] == board[j][i-1]:
-                board[j][i] += board[j][i-1] 
-                board[j][i-1] = 0
+            if board[j][i+1] == board[j][i]:
+                board[j][i+1] += board[j][i] 
+                board[j][i] = 0
         i-=1        
         
 def move_right():
-    for countr in range(3):
-        i = 2
-        while i > -1 :
-            j = 3
-            while j > -1:
-                if check_free_space(j,i+1):
-                    board[j][i+1] = board[j][i]
-                    board[j][i] = 0
-                j-=1
-            i-=1
+    for countr in range(2):
+        for ctr in range(3):
+            i=2
+            while i > -1 :
+                j = 0 
+                while j < 4:
+                    if check_free_space(j,i+1) :
+                        board[j][i+1] = board[j][i] 
+                        board[j][i] = 0
+                    j+=1
+                i-=1   
         if countr == 1 :
             break
-        add_elements_move_down()            
+        add_elements_move_right()            
     display_board()
     
 def get_choice():
