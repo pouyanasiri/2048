@@ -2,7 +2,7 @@ import time
 import random
 from os import X_OK, stat, system, name
 
-board = [[2,2,2,2],[2,2,2,2],[2,2,2,2],[2,0,0,2]]
+board = [[0,0,0,2],[0,2,2,2],[0,2,2,2],[2,0,0,2]]
 score = 0
 high_score = 0
 
@@ -91,20 +91,20 @@ def add_elements_move_down() :
         for j in range(4):
             if board[i][j] == board[i-1][j]:
                 board[i][j] += board[i-1][j] 
-            board[i-1][j] = 0
+                board[i-1][j] = 0
         i-=1    
 def move_down():
     for countr in range(2):
         i = 2
         while i >-1 :
-            j = 3
-            while j > -1:
+            j = 0
+            while j < 4:
                 temp_i = i
                 while temp_i < 3 and check_free_space(temp_i+1,j) :
                     board[temp_i+1][j] = board[temp_i][j]
                     board[temp_i][j] = 0
                     temp_i+=1
-                j-=1
+                j+=1
             i-=1
         if countr == 1 :
             break
@@ -113,27 +113,25 @@ def move_down():
 
 #################################################################################
 def add_elements_move_left() :                    
-    i=0
-    while i < 3 :
+    i=1
+    while i < 4 :
         for j in range(4):
-            if board[j][i] == board[j][i+1]:
-                board[j][i] += board[j][i+1] 
-            board[j][i+1] = 0
-        i+=1    
-        
+            if board[j][i-1] == board[j][i]:
+                board[j][i-1] += board[j][i] 
+                board[j][i] = 0
+        i+=1        
 def move_left():
     for countr in range(2):
-        i = 2
-        while i >-1 :
-            j = 3
-            while j > -1:
-                temp_i = i
-                while temp_i < 3 and check_free_space(temp_i+1,j) :
-                    board[j][temp_i+1] = board[j][temp_i+1]
-                    board[j][temp_i] = 0
-                    temp_i+=1
-                j-=1
-            i-=1
+        for ctr in range(3):
+            i=1
+            while i < 4 :
+                j = 0 
+                while j < 4:
+                    if check_free_space(j,i-1) :
+                        board[j][i-1] = board[j][i] 
+                        board[j][i] = 0
+                    j+=1
+                i+=1        
         if countr == 1 :
             break
         add_elements_move_left()            
