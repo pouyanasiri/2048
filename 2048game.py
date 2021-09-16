@@ -2,7 +2,7 @@ import time
 import random
 from os import X_OK, stat, system, name
 
-board = [[0,0,0,2],[0,2,2,2],[0,2,2,2],[2,0,0,2]]
+board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 score = 0
 high_score = 0
 
@@ -20,7 +20,7 @@ def display_board():
     for i in range(4) :
         print("\t\t\t",end ="")
         for j in range(4) :
-            print(f"* {board[i][j]} *",end = "") 
+            print(f"  {board[i][j]}  ",end = "") 
         print()
     print("\t\t\t********************")
     
@@ -28,36 +28,46 @@ def display_board():
 def check_free_space(i,j):
     return board[i][j] == 0
 
+
 def add_element_board():
-    row = 0 ; column = 0; flag = 0
-    for i in range(4):
-        for j in range(4):        
+    find_room = 0
+    for i in range(4) :
+        for j in range(4) :
+            if check_free_space(i,j):
+                find_room = 1
+                break
+                
+    if find_room == 1:
+        while True :
             column = random.randint(0,3)
             row = random.randint(0,3)
             if check_free_space(row,column) :
-                return (i , j)
-    
-    return (4 , 4)
-            
-            
-                
-                
-                            
-def check_free_space(i,j):
-    return board[i][j] == 0
+                board[row][column] = 2
+                break
+    else :
+        check_game_over()
 
-
-def check_game_over():
-    if add_element_board() == (4,4):
-        print(" GAME OVER ")
         
-    
+def check_game_over():
+        print(" GAME OVER ")
+        time.sleep(2)
+        menu()
 
 def check_win():
     if score == 2048 :
+        high_score = score
         print("you are won \n")
-        return input("do you want to continue ? (y/n) : ").lower()
-    return
+        ans = input("do you want to continue ? (y/n) : ").lower()
+        if ans == 'y':
+            pass
+        elif ans == 'n':
+            clear()
+            show_score()
+            menu()
+        else :
+            print("Incorrect input !\n try again")
+            time.sleep(2)
+
 
 ##############################################################
 def add_elements_move_up() :                    
@@ -166,7 +176,9 @@ def move_right():
     
 def get_choice():
     print("'D' or 'd' : Right\n'W' or 'w' : UP\n"+\
-        "'A' or 'a' : Left\n'S' or 's' : Down")
+        "'A' or 'a' : Left\n'S' or 's' : Down"+\
+        "\nB or b : back to menu")
+    
     choice = input("please choose a choice : ").lower()
     if choice == 'a' :
         move_left()
@@ -179,16 +191,18 @@ def get_choice():
         
     elif choice == 's' :
         move_down()
+    
+    elif choice == 'b' :
+        clear()
+        menu()
         
     else:
         print("wrong input !")
         time.sleep(2)
         clear()
+        display_board()
         get_choice()
-        
-    if check_win() == 'n':
-        pass
-    check_game_over()
+    
         
 def show_score():
     global score
@@ -197,15 +211,70 @@ def show_score():
             score = max(row)
     print (f"score : {score}")
     
-
-def main():
-    print("\t****Welcome to 2048 Game***")
-    while True :
+def menu():
+    global board
+    board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
+    add_element_board()
+    print ("1 : New game \n2 : Help \n3 : Exit")
+    number = input("please enter your input : ")
+    clear()
+    
+    if number == '1' :
+        game()    
+    
+    elif number == '2' :
+        help_game()
+    
+    elif  number == '3' :
+        exit()
+        
+    else :
+        print("Wrong input : ")
+        time.sleep(2)
         clear()
+        menu()
+    
+def help_game():
+    print("**********************************************************************************")
+    time.sleep(1)
+    print("*                      *** Description And Help ***                              *")
+    time.sleep(1)
+    print("* 2048 game in a project prepared by Pouya Nasiri                                *")
+    time.sleep(1)
+    print("* This game includes a 4 in 4 square.                                            *")
+    time.sleep(1)
+    print("* Victory condition : If you can obtain At least 2048 points , you win           *")
+    time.sleep(1)
+    print("* Equal condition : If all of room is full , you lost                            *")
+    time.sleep(1)
+    print("**********************************************************************************")
+    time.sleep(3)
+    print("1 : Back   2 : Exit ")
+    choice = input("please enter a choice : ")
+    clear()
+    if choice == '1' :
+        menu()
+    elif choice == '2':
+        exit()
+    else :
+        help_game()
+
+
+def game():
+    while True :
+        add_element_board()
         display_board()
         get_choice()
-        
+        clear()
+def main():
+    
+    print("\t****Welcome to 2048 Game***")
+    time.sleep(2)
+    
+    menu()
+    game()        
         
     
 if __name__ == '__main__':
     main()
+    
