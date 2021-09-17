@@ -2,10 +2,11 @@ import time
 import random
 from os import stat, system, name
 
-
+with open("score.txt", "r") as file: 
+    high_score = int(file.readline())
+    
 board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 score = 0
-high_score = 0
 flag_ask_continue = 0
 
 def clear():
@@ -17,22 +18,30 @@ def clear():
         _ = system('clear')
 
   
+  
 def display_board():
     show_score()
-    print("\t\t\t********************")
+    print("\t\t\t*************************************")
     
     for i in range(4) :
-        print("\t\t\t",end ="")
+        print("\t\t\t* ",end = "")
         for j in range(4) :
-            print(f"  {board[i][j]}  ",end = "") 
-        print()
+            print("{0:6d}".format(board[i][j]), end=" ")
+        print("      *")
         
-    print("\t\t\t********************")
+        
+    print("\t\t\t*************************************")
     
     
 def check_free_space(i,j):
     return board[i][j] == 0
 
+def check_game_over():
+        global score
+        print(" GAME OVER ")
+        score = 0
+        time.sleep(2)
+        menu()
 
 def add_element_board():
     find_room = 0
@@ -54,14 +63,6 @@ def add_element_board():
                 break
     else :
         check_game_over()
-
-        
-def check_game_over():
-        global score
-        print(" GAME OVER ")
-        score = 0
-        time.sleep(2)
-        menu()
 
 def check_win():
     global score
@@ -88,7 +89,6 @@ def check_win():
             time.sleep(2)
             clear()
             check_win()
-
 
 def add_elements_move_up() :                    
     
@@ -226,8 +226,8 @@ def move_right():
                         board[j][i] = 0
                         
                     j+=1
-                    
                 i-=1
+                    
                    
         if countr == 1 :
             break
@@ -319,6 +319,7 @@ def help_game():
     print("* Victory condition : If you can obtain At least 2048 points , you win           *")
     time.sleep(1)
     print("* Equal condition : If all of room is full , you lost                            *")
+    print("*\t\t\t\t\t\t\t\t\t\t *")
     time.sleep(1)
     print("**********************************************************************************")
     time.sleep(3)
@@ -361,4 +362,5 @@ def main():
     
 if __name__ == '__main__':
     main()
+    
     
