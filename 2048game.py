@@ -2,9 +2,11 @@ import time
 import random
 from os import stat, system, name
 
+
 board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
 score = 0
 high_score = 0
+flag_ask_continue = 0
 
 def clear():
       
@@ -13,15 +15,18 @@ def clear():
   
     else:
         _ = system('clear')
+
   
 def display_board():
     show_score()
     print("\t\t\t********************")
+    
     for i in range(4) :
         print("\t\t\t",end ="")
         for j in range(4) :
             print(f"  {board[i][j]}  ",end = "") 
         print()
+        
     print("\t\t\t********************")
     
     
@@ -31,13 +36,16 @@ def check_free_space(i,j):
 
 def add_element_board():
     find_room = 0
+    
     for i in range(4) :
         for j in range(4) :
+            
             if check_free_space(i,j):
                 find_room = 1
                 break
                 
     if find_room == 1:
+        
         while True :
             column = random.randint(0,3)
             row = random.randint(0,3)
@@ -49,137 +57,193 @@ def add_element_board():
 
         
 def check_game_over():
+        global score
         print(" GAME OVER ")
+        score = 0
         time.sleep(2)
         menu()
 
 def check_win():
+    global score
+    global flag_ask_continue
+    
     if score == 2048 :
         high_score = score
         print("you are won \n")
         ans = input("do you want to continue ? (y/n) : ").lower()
+        
         if ans == 'y':
-            pass
+            flag_ask_continue = 1
+        
         elif ans == 'n':
             clear()
             show_score()
+            print ("you finish the game !")
+            time.sleep(2)
+            score = 0
             menu()
+            
         else :
             print("Incorrect input !\n try again")
             time.sleep(2)
+            clear()
+            check_win()
 
 
-##############################################################
 def add_elements_move_up() :                    
+    
     for i in range(3):
         for j in range(4):
             if board[i][j] == board[i+1][j]:
                 board[i][j] += board[i+1][j] 
                 board[i+1][j] = 0
                  
+                 
 def move_up():
+    
     for countr in range(2):
         i = 1
+        
         while i < 4 :
             j = 0
+            
             while j < 4:
+                
                 temp_i = i
+                
                 while temp_i > 0 and check_free_space(temp_i-1,j) :
                     board[temp_i-1][j] = board[temp_i][j]
                     board[temp_i][j] = 0
                     temp_i-=1
                 j+=1
             i+=1
+            
         if countr == 1 :
             break
+        
         add_elements_move_up()            
     display_board()
-######################################################################################    
+
 def add_elements_move_down() :                    
     i=3
     while i >0 :
+        
         for j in range(4):
+            
             if board[i][j] == board[i-1][j]:
                 board[i][j] += board[i-1][j] 
                 board[i-1][j] = 0
-        i-=1    
+        i-=1
+            
 def move_down():
+    
     for countr in range(2):
         i = 2
         while i >-1 :
+            
             j = 0
             while j < 4:
+                
                 temp_i = i
                 while temp_i < 3 and check_free_space(temp_i+1,j) :
+                    
                     board[temp_i+1][j] = board[temp_i][j]
                     board[temp_i][j] = 0
                     temp_i+=1
+                    
                 j+=1
+                
             i-=1
+            
         if countr == 1 :
             break
+        
         add_elements_move_down()            
     display_board()
 
-#################################################################################
 def add_elements_move_left() :                    
     i=1
     while i < 4 :
+        
         for j in range(4):
+            
             if board[j][i-1] == board[j][i]:
                 board[j][i-1] += board[j][i] 
                 board[j][i] = 0
-        i+=1        
+        i+=1
+                
 def move_left():
+    
     for countr in range(2):
+        
         for ctr in range(3):
+            
             i=1
             while i < 4 :
+                
                 j = 0 
                 while j < 4:
+                    
                     if check_free_space(j,i-1) :
                         board[j][i-1] = board[j][i] 
                         board[j][i] = 0
                     j+=1
                 i+=1        
+                
         if countr == 1 :
             break
+        
         add_elements_move_left()            
     display_board()
-###################################################################################
+
 
 def add_elements_move_right() :                    
+    
     i=2
     while i > -1 :
+        
         for j in range(4):
+            
             if board[j][i+1] == board[j][i]:
                 board[j][i+1] += board[j][i] 
                 board[j][i] = 0
+                
         i-=1        
         
 def move_right():
+    
     for countr in range(2):
+        
         for ctr in range(3):
+            
             i=2
             while i > -1 :
+                
                 j = 0 
                 while j < 4:
                     if check_free_space(j,i+1) :
                         board[j][i+1] = board[j][i] 
                         board[j][i] = 0
+                        
                     j+=1
-                i-=1   
+                    
+                i-=1
+                   
         if countr == 1 :
             break
+        
         add_elements_move_right()            
     display_board()
     
 def get_choice():
+    global score
+
     print("'D' or 'd' : Right\n'W' or 'w' : UP\n"+\
         "'A' or 'a' : Left\n'S' or 's' : Down"+\
         "\nB or b : back to menu")
     
     choice = input("please choose a choice : ").lower()
+    
     if choice == 'a' :
         move_left()
         
@@ -193,6 +257,7 @@ def get_choice():
         move_down()
     
     elif choice == 'b' :
+        score = 0
         clear()
         menu()
         
@@ -206,20 +271,28 @@ def get_choice():
         
 def show_score():
     global score
+    global high_score
     for row in board:
         if score < max(row):
             score = max(row)
-    print (f"score : {score}")
+    print (f"your score is : {score}        High Score is : {high_score}")
+    if score > high_score :
+        high_score = score
+        with open("score.txt", "w") as file: 
+            file.write(f"{score}") 
+        
     
 def menu():
+    
     global board
     board = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
-    add_element_board()
+    
     print ("1 : New game \n2 : Help \n3 : Exit")
     number = input("please enter your input : ")
     clear()
     
     if number == '1' :
+        add_element_board()    
         game()    
     
     elif number == '2' :
@@ -249,23 +322,34 @@ def help_game():
     time.sleep(1)
     print("**********************************************************************************")
     time.sleep(3)
+    
     print("1 : Back   2 : Exit ")
+    
     choice = input("please enter a choice : ")
     clear()
+    
     if choice == '1' :
         menu()
+        
     elif choice == '2':
         exit()
+        
     else :
         help_game()
 
 
 def game():
+    global high_score
+    
     while True :
+        
         add_element_board()
         display_board()
         get_choice()
+        if flag_ask_continue == 0 :
+            check_win()
         clear()
+        
 def main():
     
     print("\t****Welcome to 2048 Game***")
